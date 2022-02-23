@@ -14,8 +14,7 @@
 			"c:\\javafx-sdk-17.0.1\\lib\\javafx.media.jar",
 			"c:\\javafx-sdk-17.0.1\\lib\\javafx.swing.jar",
 			"c:\\javafx-sdk-17.0.1\\lib\\javafx.web.jar",
-			"c:\\javafx-sdk-17.0.1\\lib\\javafx-swt.jar",
-			"c:\\sql_connectors\\mariadb-java-client-2.7.3.jar"
+			"c:\\javafx-sdk-17.0.1\\lib\\javafx-swt.jar"
 		]
 	},
 	"launch": {
