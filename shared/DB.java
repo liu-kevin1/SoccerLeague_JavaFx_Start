@@ -12,6 +12,7 @@ import java.util.Properties;
 import coach.Coach;
 import league.League;
 //import team.Team;
+import team.Team;
 
 public class DB {
 	private Connection conn = null;
@@ -196,74 +197,80 @@ public class DB {
 	}
 
 	
-	// public static ArrayList<Team> loadTeams() {
-	// 	ArrayList<Team> list = new ArrayList<>();
-	// 	String queryString = "select team.team_id, name, team.league_id, team.coach_id, league_name, coach_last_name, coach_first_name, count(player.team_id) as used "
-	// 			+
-	// 			" from team " +
-	// 			" left join league on team.league_id = league.league_id " +
-	// 			" left join coach on team.coach_id = coach.coach_id " +
-	// 			" left join player on team.team_id = player.team_id " +
-	// 			" group by team.team_id, name, team.league_id, team.coach_id, league_name, coach_last_name, coach_first_name " +
-	// 			" order by name ";
+	public static ArrayList<Team> loadTeams() {
+		ArrayList<Team> list = new ArrayList<>();
+		String queryString = "select team.team_id, name, team.league_id, team.coach_id, league_name, coach_last_name, coach_first_name, count(player.team_id) as used "
+				+
+				" from team " +
+				" left join league on team.league_id = league.league_id " +
+				" left join coach on team.coach_id = coach.coach_id " +
+				" left join player on team.team_id = player.team_id " +
+				" group by team.team_id, name, team.league_id, team.coach_id, league_name, coach_last_name, coach_first_name " +
+				" order by name ";
 
-	// 	try (
-	// 			PreparedStatement queryStmt = db.conn.prepareStatement(queryString);
-	// 			ResultSet rs = queryStmt.executeQuery();) {
+		try (
+				PreparedStatement queryStmt = db.conn.prepareStatement(queryString);
+				ResultSet rs = queryStmt.executeQuery();) {
 
-	// 		while (rs.next()) {
-	// 			Team t = new Team(rs.getString("team_id"), rs.getString("league_id"),
-	// 					rs.getString("league_name"), rs.getString("name"),
-	// 					rs.getString("coach_id"), rs.getString("coach_last_name"), rs.getString("coach_first_name"));
+			while (rs.next()) {
+				Team t = new Team(rs.getString("team_id"), rs.getString("league_id"),
+						rs.getString("league_name"), rs.getString("name"),
+						rs.getString("coach_id"), rs.getString("coach_last_name"), rs.getString("coach_first_name"));
 
-	//			TODO
+				// TODO
+				list.add(t);
+			}
 
-	// 		}
+		} catch (Exception ex) {
+			System.err.println(ex);
+			ex.printStackTrace(System.err);
+		}
 
-	// 	} catch (Exception ex) {
-	// 		System.err.println(ex);
-	// 		ex.printStackTrace(System.err);
-	// 	}
+		return list;
+	}
 
-	// 	return list;
-	// }
+	public static void insertTeam(String leagueID, String teamName, String coachID) {
+		String query = "insert into team(league_id, team_name, coach_id) values (?, ?, ?))";
 
-	// public static void insertTeam(String leagueID, String teamName, String coachID) {
-	// 	String query = "TODO";
+		try (PreparedStatement insertStmt = db.conn.prepareStatement(query)) {
+			insertStmt.setString(1, leagueID);
+			insertStmt.setString(2, teamName);
+			insertStmt.setString(3, coachID);
 
-	// 	try (PreparedStatement insertStmt = db.conn.prepareStatement(query)) {
+		} catch (Exception ex) {
+			System.err.println(ex);
+			ex.printStackTrace(System.err);
+		}
+	}
 
-	// 	TODO
+	public static void updateTeam(Team team) {
+		String query = "update team set name = ?, " +
+			" league_id = ?, " +
+			" coach_id = ? " +
+			" where team_id = ?";
 
-	// 	} catch (Exception ex) {
-	// 		System.err.println(ex);
-	// 		ex.printStackTrace(System.err);
-	// 	}
-	// }
+		try (PreparedStatement updateStmt = db.conn.prepareStatement(query)) {
+			updateStmt.setString(1, team.getTeamName());
+			updateStmt.setString(2, team.getLeague().getLeagueID());
+			updateStmt.setString(3, team.getCoach().getCoachID());
+			updateStmt.setString(4, team.getTeamID());
+			// TODO
+		} catch (Exception ex) {
+			System.err.println(ex);
+			ex.printStackTrace(System.err);
+		}
+	}
 
-	// public static void updateTeam(Team team) {
-	// 	String query = TODO
+	public static void deleteTeam(String teamID) {
+		String query = "delete from team where team_id = ?";
 
-	// 	try (PreparedStatement updateStmt = db.conn.prepareStatement(query)) {
-
-	// 		TODO
-	// 	} catch (Exception ex) {
-	// 		System.err.println(ex);
-	// 		ex.printStackTrace(System.err);
-	// 	}
-	// }
-
-	// public static void deleteTeam(String teamID) {
-	// 	TODO
-
-	// 	try (PreparedStatement updateStmt = db.conn.prepareStatement(query)) {
-
-	// 		TODO
-	// 		updateStmt.executeUpdate();
-	// 	} catch (Exception ex) {
-	// 		System.err.println(ex);
-	// 		ex.printStackTrace(System.err);
-	// 	}
-	// }
+		try (PreparedStatement updateStmt = db.conn.prepareStatement(query)) {
+			updateStmt.setString(1, teamID);
+			updateStmt.executeUpdate();
+		} catch (Exception ex) {
+			System.err.println(ex);
+			ex.printStackTrace(System.err);
+		}
+	}
 
 }

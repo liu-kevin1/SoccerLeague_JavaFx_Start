@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import league.LeagueView;
 // import team.TeamView;
+import team.TeamView;
 
 public class MainFrame extends Application {
 
@@ -22,16 +23,16 @@ public class MainFrame extends Application {
     public void start(Stage primaryStage) throws SQLException {
         LeagueView lv = new LeagueView();
         CoachView cv = new CoachView();
-//        TeamView tv = new TeamView();
+        TeamView tv = new TeamView();
         TabPane tabPane = new TabPane();
 
         Tab tab1 = new Tab("Leagues", lv.getLeagueTab());
         Tab tab2 = new Tab("Coaches", cv.getCoachTab());
-//        Tab tab3 = new Tab("Teams" , tv.getTeamTab());
+        Tab tab3 = new Tab("Teams" , tv.getTeamTab());
 
         tabPane.getTabs().add(tab1);
         tabPane.getTabs().add(tab2);
-//        tabPane.getTabs().add(tab3);
+        tabPane.getTabs().add(tab3);
 
         tab1.setOnSelectionChanged(ev -> {
             lv.reloadLeagues();
@@ -41,9 +42,9 @@ public class MainFrame extends Application {
             cv.reloadCoachs();
         });
 
-        // tab3.setOnSelectionChanged(ev -> {
-        //     tv.reloadTeams();
-        // });
+        tab3.setOnSelectionChanged(ev -> {
+            tv.reloadTeams();
+        });
 
         VBox vBox = new VBox(tabPane);
         Scene scene = new Scene(vBox);
